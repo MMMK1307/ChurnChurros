@@ -4,7 +4,7 @@ import pandas as pd
 
 
 class Context:
-    data: pd.DataFrame
+    data: pd.DataFrame | None = None
 
 
 @dataclasses.dataclass

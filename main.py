@@ -16,6 +16,13 @@ def bad_request(error: str):
 def index():
     return render_template("index.html")
 
+@app.route("/graphs", methods=["GET"])
+def graphs():
+    if _context.data is not None:
+        data.create_graphs(_context.data)
+    return render_template("graphs.html")
+
+
 @app.route("/submit-data", methods=["POST"])
 def file_submit():
     file = request.files.get('data-file')
