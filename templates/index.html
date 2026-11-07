@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ChurnChurros</title>
+</head>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    html, body {
+        min-height: 100vh;
+        font-family: monospace, sans-serif;
+    }
+    body {
+        background-color: black;
+        color: #aaaaaa;
+    }
+    #error-response {
+        color: red;
+    }
+    #success-response {
+        color: green;
+    }
+
+    header {
+        padding: 1em 0;
+
+        a {
+            text-decoration: none;
+            color: #cccccc;
+        }
+    }
+</style>
+<body>
+    <header>
+        <a href="">Dados</a>
+        <a href="/graphs">Graphs</a>
+        <a href="/tests">Testes</a>
+    </header>
+    <main>
+        <h1>Insira os dados para serem analisados</h1>
+        <form id="file-form">
+            <label for="data-file">Arquivo (.csv)</label>
+            <input id="data-file" type="file" name="data-file" accept=".csv">
+            <button>Enviar</button>
+        </form>
+    </main>
+    <div id="error-response"></div>
+    <div id="success-response"></div>
+</body>
+
+<script>
+    const fileForm = document.getElementById("file-form");
+    fileForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const requestData = new FormData(fileForm);
+        console.log(requestData);
+        const response = await fetch("/submit-data", {
+            method: "POST",
+            body: requestData
+        });
+        const data = await response.json();
+        if (response.ok) {
+            document.getElementById("success-response").innerText = data["text"];
+            return;
+        }
+        document.getElementById("error-response").innerText = data["error"];
+    })
+</script>
+
+</html>
