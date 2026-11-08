@@ -4,42 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ChurnChurros</title>
+    <link rel="stylesheet" href="/static/main.css">
 </head>
 <style>
-    * {
-        padding: 0;
-        margin: 0;
-    }
-    html, body {
-        min-height: 100vh;
-        font-family: monospace, sans-serif;
-    }
-    body {
-        background-color: black;
-        color: #aaaaaa;
-    }
-    #error-response {
-        color: red;
-    }
-    #success-response {
-        color: green;
-    }
 
-    header {
-        padding: 1em 0;
-
-        a {
-            text-decoration: none;
-            color: #cccccc;
-        }
-    }
 </style>
 <body>
-    <header>
-        <a href="">Dados</a>
-        <a href="/graphs">Graphs</a>
-        <a href="/tests">Testes</a>
-    </header>
+    {% include "header.html" %}
     <main>
         <h1>Insira os dados para serem analisados</h1>
         <form id="file-form">
@@ -64,10 +35,10 @@
         });
         const data = await response.json();
         if (response.ok) {
-            document.getElementById("success-response").innerText = data["text"];
+            document.getElementById("success-response").innerText += data["text"];
             return;
         }
-        document.getElementById("error-response").innerText = data["error"];
+        document.getElementById("error-response").innerText += data["error"];
     })
 </script>
 

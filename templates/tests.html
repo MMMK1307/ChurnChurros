@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tests</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<style>
+</style>
+<body>
+    {% include "header.html" %}
+    <main>
+        <form id="test-form">
+            <label for="fail_count">Número de Falhas</label>
+            <input id="fail_count" name="fail_count" required value="0" type="number" min="0">
+
+            <label for="complains">Reclamação?</label>
+            <select id="complains" name="complains" required>
+                <option value="0">Não</option>
+                <option value="1">Sim</option>
+            </select>
+
+            <label for="use_time">Tempo de Uso (minutos)</label>
+            <input id="use_time" name="use_time" type="number" min="0">
+
+            <label for="model_id">Modelo</label>
+            <select id="model_id" name="model_id" required>
+                <option value="0">DecisionTree</option>
+                <option value="1">RandomForest</option>
+            </select>
+
+            <button type="submit">Testar</button>
+        </form>
+
+        <div>
+            <h2>Modelos: </h2>
+            {% for model in models %}
+                <p>--------------</p>
+                <p>Modelo: {{ model.model_name_str() }}</p>
+                <p>Acurácia: {{ model.accuracy }}</p>
+                <p>M-Confusão: </p>
+                <p> -- {{ model.x_mat[0] }}</p>
+                <p> -- {{ model.x_mat[1] }}</p>
+            {% endfor %}
+        </div>
+
+    </main>
+    <div id="error-response"></div>
+    <div id="success-response"></div>
+</body>
+<script>
+    const testForm = document.getElementById("test-form");
+    testForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const requestData = new FormData(testForm);
+        console.log(requestData);
+        const response = await fetch("/test-data", {
+            method: "POST",
+            body: requestData
+        });
+        const data = await response.json();
+        if (response.ok) {
+            document.getElementById("success-response").innerText += data["text"];
+            return;
+        }
+        document.getElementById("error-response").innerText += data["error"];
+    });
+</script>
+</html>
