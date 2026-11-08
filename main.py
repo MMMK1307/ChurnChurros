@@ -57,7 +57,7 @@ def test_data():
     try:
         complains = request.form.get("complains", "0") == '1'
         call_failure = int(request.form.get("fail_count", "0"))
-        use_time = int(request.form.get("use_time", "0"))
+        use_time = int(request.form.get("use_time", "0")) * 60
         model_id = int(request.form.get("model_id", "0"))
     except ValueError:
         return bad_request("Valores Inválidos")
@@ -66,8 +66,11 @@ def test_data():
         return bad_request("Modelo Inválido")
 
     prediction = _context.models[model_id].predict_single(complains, call_failure, use_time)
-
-    return jsonify({"prediction": prediction, **request.form.to_dict()})
+    return_data = {
+        "churn": int(prediction),
+        "model": _context.models[model_id].model_name_str()
+    }
+    return jsonify(return_data)
 
 
 def main():

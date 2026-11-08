@@ -61,7 +61,8 @@
         });
         const data = await response.json();
         if (response.ok) {
-            document.getElementById("success-response").innerText += data["text"];
+            const successText = `<p>Modelo: ${data['model']} | Churn: ${data["churn"] === 1 ? "Sim" : "Não"}</p>`;
+            document.getElementById("success-response").innerHTML += successText;
             return;
         }
         document.getElementById("error-response").innerText += data["error"];
